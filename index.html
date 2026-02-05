@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHEMVENTUR v116 – MULTIPLAYER EDITION 🛠️☢️🎻⚛️🎮</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/ui.css">
+  <link rel="stylesheet" href="css/effects.css">
+  <link rel="stylesheet" href="css/env.css">
+  <link rel="stylesheet" href="css/periodicTable.css">
+  
+  <!-- 🔥 Firebase SDK for Multiplayer -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+  
+  <div id="left-panel">
+    <h1>CHEMVENTUR v116 🎮</h1>
+    
+    <!-- 🚀 SHIP HP BAR! -->
+    <div id="ship-hp-container" style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.5);border-radius:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+        <span style="font-size:10px;color:#888;">🚀 SHIP HP</span>
+        <span id="ship-hp-text" style="font-size:11px;font-weight:bold;color:#00ff41;">100%</span>
+      </div>
+      <div style="width:100%;height:10px;background:#222;border:1px solid #00ff41;border-radius:3px;overflow:hidden;">
+        <div id="ship-hp-bar" style="width:100%;height:100%;background:linear-gradient(90deg,#00ff41,#88ff00);transition:width 0.3s,background 0.3s;"></div>
+      </div>
+    </div>
+    
+    <div id="target-box">Target: <span id="target-text">Free play</span></div>
+    
+    <!-- STAGE DISPLAY -->
+    <div class="info-window mt-sm" style="text-align:center;padding:5px;">
+      <strong>🔍 STAGE:</strong> <span id="stage-display" style="color:#00ff41;">1 - ⚛️ Subatomic</span>
+      <div style="font-size:8px;color:#888;">SHIFT+Scroll=Stage | CTRL+Scroll=Zoom</div>
+      <div style="font-size:9px;color:#ff8800;margin-top:3px;">Stage 0 = 🎻 Strings | Stage 1 = ⚛️ Atoms | Stage 2 = 🧬 Molecules</div>
+    </div>
+    
+    <div class="flex flex-wrap gap-xs mt-sm">
+      <button class="btn" id="btn-target">🎯</button>
+      <button class="btn" id="btn-rain" style="background:linear-gradient(180deg,#00bfff,#0066ff);color:#fff;font-weight:bold;">🌧️💧</button>
+      <button class="btn" id="btn-collider">💥None</button>
+      <button class="btn" id="btn-gravity">Grav:Down</button>
+      <button class="btn" id="btn-boundary">Bound:Open</button>
+      <button class="btn" id="btn-grid">Grid:OFF</button>
+      <button class="btn danger" id="btn-clear">🗑️</button>
+      <button class="btn" id="btn-garage" style="background:#663300;border-color:#ff8800;">🔧</button>
+    </div>
+    
+    <!-- NEW: Electron Mode Button! -->
+    <button class="btn full-width mt-sm" id="btn-electron-mode" style="background:linear-gradient(90deg,#00ffff,#ff00ff,#ffff00);color:#000;font-weight:bold;">
+      ⚡ Electron: Normal
+    </button>
+    
+    <!-- Periodic Table Button -->
+    <button class="btn full-width mt-sm" id="btn-periodic-table" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#00d2d3,#ff00ff);color:#000;font-weight:bold;">
+      ⚛️ PERIODIC TABLE (118 Elements!)
+    </button>
+    
+    <!-- 🔬 PubChem Search Button -->
+    <button class="btn full-width mt-sm" id="btn-pubchem" onclick="CHEMVENTUR.UI.openPubChemSearch()" style="background:linear-gradient(90deg,#00ff41,#00ffff,#00ff41);color:#000;font-weight:bold;">
+      🔬 PUBCHEM (60+ Molecules!)
+    </button>
+    
+    <div class="info-window mt-sm">
+      <strong>🔫 GUNS (1-9, 0):</strong>
+      <div id="gun-selector">
+        <button class="gun-btn" data-gun="1">1:p⁺</button>
+        <button class="gun-btn" data-gun="2">2:n</button>
+        <button class="gun-btn" data-gun="3">3:e⁻🎵</button>
+        <button class="gun-btn" data-gun="4">4:☯Rain</button>
+        <button class="gun-btn active" data-gun="5">5:⚛Atom</button>
+        <button class="gun-btn" data-gun="6">6:🧬Shot</button>
+        <button class="gun-btn" data-gun="7">7:🎵Beam</button>
+        <button class="gun-btn" data-gun="8">8:✨Anti</button>
+        <button class="gun-btn" data-gun="9">9:🔮Grav</button>
+        <button class="gun-btn" data-gun="0">0:⏰Time</button>
+      </div>
+    </div>
+    
+    <div class="mt-sm" style="font-size:10px">Gun: <span id="gun-name" class="neon-text">Atom Gun</span></div>
+    
+    <div class="info-window compact" style="border-color:#ff0044">
+      <strong style="color:#ff0044">🔗 MOLECULAR DREAMS!</strong><br>
+      Atoms bond when close!<br>
+      ⚗️ Reactions: 2H+O→H₂O<br>
+      ⚡ Cycle electron modes!
+    </div>
+    
+    <!-- 🎵 AUDIO CONTROLS 🎵 -->
+    <div class="info-window compact" style="border-color:#8800ff">
+      <strong style="color:#8800ff">🎵 AUDIO</strong><br>
+      <div class="flex gap-xs mt-xs">
+        <button class="btn" id="btn-audio-toggle" style="font-size:16px">🔇</button>
+        <button class="btn" id="btn-music-toggle" style="font-size:16px">🎵</button>
+        <input type="file" id="music-upload" accept="audio/*" style="display:none">
+        <button class="btn" id="btn-music-upload" style="font-size:12px">📁Load</button>
+      </div>
+      <div id="audio-status" style="font-size:9px;margin-top:4px;color:#888">Sound: OFF</div>
+      <div id="music-status" style="font-size:9px;color:#888">Music: None</div>
+    </div>
+    
+    <!-- 😈 ENVIRONMENT BUTTON IN PANEL -->
+    <button class="btn full-width mt-sm" id="env-btn" style="background:linear-gradient(90deg,#ff0044,#ff6600,#ff0044);color:#fff;font-weight:bold;font-size:14px;">
+      😈 ENVIRONMENT (16 Calculators!)
+    </button>
+    
+    <div class="info-window">
+      Time: <input type="range" id="time-slider" min="0" max="13" value="6" style="width:140px">
+      <span id="speed-value">Normal</span>
+    </div>
+    
+    <div class="flex gap-xs mt-sm">
+      <button class="btn" id="btn-save">💾</button>
+      <button class="btn" id="btn-load">📁</button>
+      <button class="btn" id="btn-screenshot">📸</button>
+    </div>
+    
+    <div class="mt-sm" style="font-size:9px">
+      <strong>📦 Inventory:</strong>
+      <div id="inventory"></div>
+    </div>
+    <div id="stats">Atoms: 0</div>
+  </div>
+  
+  <div id="canvas-container">
+    <canvas id="game-canvas"></canvas>
+  </div>
+  
+  <div id="status-bar"></div>
+  
+  <!-- ===== ENVIRONMENT WINDOW ===== -->
+  <div id="env-window">
+    <button class="close-env" onclick="CHEMVENTUR.UI.closeEnvWindow()">✕</button>
+    <h2>😈 SUPER ENVIRONMENT 😈</h2>
+    
+    <div class="env-grid">
+      <!-- Temperature -->
+      <div class="env-cell temp" onclick="CHEMVENTUR.UI.openCalc('temp')">
+        <div class="env-icon">🌡️</div>
+        <div class="env-label">Temperature</div>
+        <div class="env-value" id="env-temp-val">298 K</div>
+      </div>
+      
+      <!-- Pressure -->
+      <div class="env-cell press" onclick="CHEMVENTUR.UI.openCalc('press')">
+        <div class="env-icon">🏋️</div>
+        <div class="env-label">Pressure</div>
+        <div class="env-value" id="env-press-val">1 atm</div>
+      </div>
+      
+      <!-- Gravity -->
+      <div class="env-cell grav" onclick="CHEMVENTUR.UI.openCalc('grav')">
+        <div class="env-icon">🌎</div>
+        <div class="env-label">Gravity</div>
+        <div class="env-value" id="env-grav-val">9.81 m/s²</div>
+      </div>
+      
+      <!-- Radiation -->
+      <div class="env-cell rad" onclick="CHEMVENTUR.UI.openCalc('rad')">
+        <div class="env-icon">☢️</div>
+        <div class="env-label">Radiation</div>
+        <div class="env-value" id="env-rad-val">0.4 mSv/yr</div>
+      </div>
+      
+      <!-- Electric -->
+      <div class="env-cell elec" onclick="CHEMVENTUR.UI.openCalc('elec')">
+        <div class="env-icon">⚡</div>
+        <div class="env-label">Electric</div>
+        <div class="env-value" id="env-elec-val">0 V/m</div>
+      </div>
+      
+      <!-- Magnetic -->
+      <div class="env-cell mag" onclick="CHEMVENTUR.UI.openCalc('mag')">
+        <div class="env-icon">🧲</div>
+        <div class="env-label">Magnetic</div>
+        <div class="env-value" id="env-mag-val">50 μT</div>
+      </div>
+      
+      <!-- EM Waves -->
+      <div class="env-cell em" onclick="CHEMVENTUR.UI.openCalc('em')">
+        <div class="env-icon">📡</div>
+        <div class="env-label">EM Waves</div>
+        <div class="env-value" id="env-em-val">300 MHz</div>
+      </div>
+      
+      <!-- Dark Matter -->
+      <div class="env-cell dm" onclick="CHEMVENTUR.UI.openCalc('dm')">
+        <div class="env-icon">🕳️</div>
+        <div class="env-label">Dark Matter</div>
+        <div class="env-value" id="env-dm-val">0.3 GeV/cm³</div>
+      </div>
+      
+      <!-- Cosmology -->
+      <div class="env-cell cosm" onclick="CHEMVENTUR.UI.openCalc('cosm')">
+        <div class="env-icon">🌌</div>
+        <div class="env-label">Cosmology</div>
+        <div class="env-value">H₀=70</div>
+      </div>
+      
+      <!-- Quantum -->
+      <div class="env-cell quantum" onclick="CHEMVENTUR.UI.openCalc('quantum')">
+        <div class="env-icon">⚛️</div>
+        <div class="env-label">Quantum</div>
+        <div class="env-value">n=1, l=0</div>
+      </div>
+      
+      <!-- Relativity -->
+      <div class="env-cell rel" onclick="CHEMVENTUR.UI.openCalc('rel')">
+        <div class="env-icon">🚀</div>
+        <div class="env-label">Relativity</div>
+        <div class="env-value">v=0.99c</div>
+      </div>
+      
+      <!-- Particles -->
+      <div class="env-cell particle" onclick="CHEMVENTUR.UI.openCalc('particle')">
+        <div class="env-icon">🔬</div>
+        <div class="env-label">Particles</div>
+        <div class="env-value">e⁻=0.511 MeV</div>
+      </div>
+      
+      <!-- Astro -->
+      <div class="env-cell astro" onclick="CHEMVENTUR.UI.openCalc('astro')">
+        <div class="env-icon">⭐</div>
+        <div class="env-label">Astronomy</div>
+        <div class="env-value">1 AU</div>
+      </div>
+      
+      <!-- Chemistry -->
+      <div class="env-cell chem" onclick="CHEMVENTUR.UI.openCalc('chem')">
+        <div class="env-icon">🧪</div>
+        <div class="env-label">Chemistry</div>
+        <div class="env-value">N_A=6.022e23</div>
+      </div>
+      
+      <!-- Biology -->
+      <div class="env-cell bio" onclick="CHEMVENTUR.UI.openCalc('bio')">
+        <div class="env-icon">🧬</div>
+        <div class="env-label">Biology</div>
+        <div class="env-value">ATP=30.5 kJ</div>
+      </div>
+      
+      <!-- Geo -->
+      <div class="env-cell geo" onclick="CHEMVENTUR.UI.openCalc('geo')">
+        <div class="env-icon">🌍</div>
+        <div class="env-label">Geophysics</div>
+        <div class="env-value">Depth: 0 km</div>
+      </div>
+    </div>
+    
+    <button class="apply-env-btn" onclick="CHEMVENTUR.EnvCalc.applyToGame()">🌍 APPLY TO GAME</button>
+  </div>
+  
+<!-- ===== GARAGE WINDOW ===== -->
+<div id="garage-window" class="popup-panel" style="min-width:350px;">
+  <h3>🔧 SHIP GARAGE 🚀</h3>
+  <button class="btn popup-close" onclick="CHEMVENTUR.UI.closeGarage()">✕</button>
+  
+  <div style="text-align:center;padding:20px;">
+    <!-- Ship visual -->
+    <div id="garage-ship-visual" style="font-size:60px;margin-bottom:15px;">🚀</div>
+    
+    <!-- Damage display -->
+    <div style="margin:15px 0;">
+      <div style="color:#888;font-size:11px;">SHIP DAMAGE</div>
+      <div id="garage-damage-bar" style="width:100%;height:20px;background:#333;border:2px solid #00ff41;border-radius:4px;overflow:hidden;">
+        <div id="garage-damage-fill" style="width:0%;height:100%;background:linear-gradient(90deg,#00ff41,#ffff00,#ff0000);transition:width 0.3s;"></div>
+      </div>
+      <div id="garage-damage-text" style="color:#ff0000;font-size:18px;font-weight:bold;margin-top:5px;">0%</div>
+    </div>
+    
+    <!-- Repair options -->
+    <div style="margin-top:20px;">
+      <div style="color:#888;font-size:10px;margin-bottom:10px;">REPAIR OPTIONS</div>
+      
+      <button class="btn full-width" onclick="CHEMVENTUR.UI.repairShip(10)" style="margin:5px 0;">
+        🔧 Quick Fix (-10%) <span style="color:#ffff00;">[FREE]</span>
+      </button>
+      
+      <button class="btn full-width" onclick="CHEMVENTUR.UI.repairShip(25)" style="margin:5px 0;">
+        🔩 Standard Repair (-25%) <span style="color:#ffff00;">[1 Atom]</span>
+      </button>
+      
+      <button class="btn full-width" onclick="CHEMVENTUR.UI.repairShip(100)" style="margin:5px 0;background:#003300;">
+        ⚡ FULL REPAIR (-100%) <span style="color:#ffff00;">[5 Atoms]</span>
+      </button>
+    </div>
+    
+    <!-- Ship stats -->
+    <div style="margin-top:20px;padding:10px;background:rgba(0,255,65,0.1);border-radius:6px;">
+      <div style="color:#00ff41;font-size:11px;margin-bottom:5px;">SHIP STATS</div>
+      <div style="font-size:10px;color:#888;">
+        <div>Hull Integrity: <span id="garage-hull" style="color:#00ff41;">100%</span></div>
+        <div>Stage: <span id="garage-stage" style="color:#00ffff;">1 - Subatomic</span></div>
+        <div>Strings Built: <span id="garage-strings" style="color:#ff00ff;">0</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- ===== TEMPERATURE CALC ===== -->
+  <div class="calc-popup" id="calc-temp">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('temp')">✕</button>
+    <h3>🌡️ Temperature</h3>
+    <div class="calc-row"><label>Celsius (°C):</label><input type="number" id="temp-c" value="25" onchange="CHEMVENTUR.EnvCalc.calcTemp('c')"></div>
+    <div class="calc-row"><label>Kelvin (K):</label><input type="number" id="temp-k" value="298.15" onchange="CHEMVENTUR.EnvCalc.calcTemp('k')"></div>
+    <div class="calc-row"><label>Fahrenheit (°F):</label><input type="number" id="temp-f" value="77" onchange="CHEMVENTUR.EnvCalc.calcTemp('f')"></div>
+    <div class="calc-row"><label>Rankine (°R):</label><input type="number" id="temp-r" value="536.67" onchange="CHEMVENTUR.EnvCalc.calcTemp('r')"></div>
+    <button class="btn full-width mt-sm" onclick="CHEMVENTUR.EnvCalc.applyTemperature()" style="background:#ff6600;color:#fff;">🔥 APPLY TEMP TO GAME</button>
+    <div class="calc-chart-container"><canvas id="temp-chart" class="calc-chart" width="150" height="150"></canvas></div>
+    <div class="calc-info" id="temp-info">Room temperature</div>
+  </div>
+  
+  <!-- ===== PRESSURE CALC ===== -->
+  <div class="calc-popup" id="calc-press">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('press')">✕</button>
+    <h3>🏋️ Pressure</h3>
+    <div class="calc-row"><label>Atmospheres:</label><input type="number" id="press-atm" value="1" onchange="CHEMVENTUR.EnvCalc.calcPress('atm')"></div>
+    <div class="calc-row"><label>Pascals:</label><input type="number" id="press-pa" value="101325" onchange="CHEMVENTUR.EnvCalc.calcPress('pa')"></div>
+    <div class="calc-row"><label>Bar:</label><input type="number" id="press-bar" value="1.01325" onchange="CHEMVENTUR.EnvCalc.calcPress('bar')"></div>
+    <div class="calc-row"><label>PSI:</label><input type="number" id="press-psi" value="14.7" onchange="CHEMVENTUR.EnvCalc.calcPress('psi')"></div>
+    <div class="calc-row"><label>Torr:</label><input type="number" id="press-torr" value="760" onchange="CHEMVENTUR.EnvCalc.calcPress('torr')"></div>
+    <div class="calc-chart-container"><canvas id="press-chart" class="calc-chart" width="150" height="150"></canvas></div>
+    <div class="calc-info" id="press-info">Sea level</div>
+    <button class="btn full-width mt-sm" onclick="CHEMVENTUR.EnvCalc.applyPressure()" style="background:#00ccff;color:#000;">💨 APPLY PRESSURE TO GAME</button>
+  </div>
+  
+  <!-- ===== GRAVITY CALC ===== -->
+  <div class="calc-popup" id="calc-grav">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('grav')">✕</button>
+    <h3>🌎 Gravity</h3>
+    <div class="calc-row"><label>Mass 1 (kg):</label><input type="number" id="grav-m1" value="5.972e24" onchange="CHEMVENTUR.EnvCalc.calcGrav()"></div>
+    <div class="calc-row"><label>Mass 2 (kg):</label><input type="number" id="grav-m2" value="1" onchange="CHEMVENTUR.EnvCalc.calcGrav()"></div>
+    <div class="calc-row"><label>Distance (m):</label><input type="number" id="grav-r" value="6.371e6" onchange="CHEMVENTUR.EnvCalc.calcGrav()"></div>
+    <div class="calc-row"><label>Force (N):</label><input type="text" id="grav-force" readonly></div>
+    <div class="calc-row"><label>Accel (m/s²):</label><input type="text" id="grav-accel" readonly></div>
+    <div class="calc-chart-container"><canvas id="grav-chart" class="calc-chart" width="150" height="150"></canvas></div>
+    <div class="calc-info" id="grav-info">Earth surface</div>
+    <button class="btn full-width mt-sm" onclick="CHEMVENTUR.EnvCalc.applyGravity()" style="background:#ffcc00;color:#000;">⬇️ APPLY GRAVITY TO GAME</button>
+  </div>
+  
+  <!-- ===== RADIATION CALC ===== -->
+  <div class="calc-popup" id="calc-rad">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('rad')">✕</button>
+    <h3>☢️ Radiation</h3>
+    <div class="calc-row"><label>mSv/year:</label><input type="number" id="rad-msv" value="0.4" onchange="CHEMVENTUR.EnvCalc.calcRad()"></div>
+    <div class="calc-row"><label>μSv/year:</label><input type="text" id="rad-usv" readonly></div>
+    <div class="calc-row"><label>rem:</label><input type="text" id="rad-rem" readonly></div>
+    <div class="calc-row"><label>Gray:</label><input type="text" id="rad-gray" readonly></div>
+    <div class="calc-chart-container"><canvas id="rad-chart" class="calc-chart" width="150" height="150"></canvas></div>
+    <div class="calc-info" id="rad-info">Background safe</div>
+  </div>
+  
+  <!-- ===== ELECTRIC CALC ===== -->
+  <div class="calc-popup" id="calc-elec">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('elec')">✕</button>
+    <h3>⚡ Electric Field</h3>
+    <div class="calc-row"><label>Voltage (V):</label>
+      <div class="slider-sync">
+        <input type="range" id="elec-v" min="0" max="10000" value="100" oninput="document.getElementById('elec-v-num').value=this.value;CHEMVENTUR.EnvCalc.calcElec()">
+        <input type="number" id="elec-v-num" value="100" oninput="document.getElementById('elec-v').value=this.value;CHEMVENTUR.EnvCalc.calcElec()">
+      </div>
+    </div>
+    <div class="calc-row"><label>Distance (m):</label>
+      <div class="slider-sync">
+        <input type="range" id="elec-d" min="0.01" max="10" step="0.01" value="0.1" oninput="document.getElementById('elec-d-num').value=this.value;CHEMVENTUR.EnvCalc.calcElec()">
+        <input type="number" id="elec-d-num" value="0.1" step="0.01" oninput="document.getElementById('elec-d').value=this.value;CHEMVENTUR.EnvCalc.calcElec()">
+      </div>
+    </div>
+    <div class="calc-row"><label>Field (V/m):</label><input type="text" id="elec-e" readonly></div>
+    <div class="calc-row"><label>Risk:</label><span id="elec-risk" style="font-weight:bold;"></span></div>
+    <div class="calc-chart-container"><canvas id="elec-chart" class="calc-chart" width="150" height="150"></canvas></div>
+    <div class="calc-info">Green=safe • Yellow=caution • Red=danger • Purple=plasma!</div>
+  </div>
+  
+  <!-- ===== MAGNETIC CALC ===== -->
+  <div class="calc-popup" id="calc-mag">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('mag')">✕</button>
+    <h3>🧲 Magnetic Field</h3>
+    <div class="calc-row"><label>Tesla (T):</label><input type="number" id="mag-t" value="50e-6" step="1e-6" onchange="CHEMVENTUR.EnvCalc.calcMag()"></div>
+    <div class="calc-row"><label>Gauss (G):</label><input type="text" id="mag-g" readonly></div>
+    <div class="calc-row"><label>μTesla:</label><input type="text" id="mag-ut" readonly></div>
+    <div class="calc-chart-container"><canvas id="mag-chart" class="calc-chart" width="150" height="150"></canvas></div>
+    <div class="calc-info" id="mag-info">Earth's field</div>
+  </div>
+  
+  <!-- ===== EM WAVES CALC ===== -->
+  <div class="calc-popup" id="calc-em">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('em')">✕</button>
+    <h3>📡 EM Waves</h3>
+    <div class="calc-row"><label>Frequency (Hz):</label><input type="number" id="em-freq" value="300e6" onchange="CHEMVENTUR.EnvCalc.calcEM()"></div>
+    <div class="calc-row"><label>Wavelength:</label><input type="text" id="em-wave" readonly></div>
+    <div class="calc-row"><label>Photon Energy:</label><input type="text" id="em-energy" readonly></div>
+    <div class="calc-info" id="em-info">Radio waves</div>
+  </div>
+  
+  <!-- ===== DARK MATTER CALC ===== -->
+  <div class="calc-popup" id="calc-dm">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('dm')">✕</button>
+    <h3>🕳️ Dark Matter</h3>
+    <div class="calc-row"><label>Density (GeV/cm³):</label><input type="number" id="dm-density" value="0.3" step="0.1" onchange="CHEMVENTUR.EnvCalc.calcDM()"></div>
+    <div class="calc-info" id="dm-info">Local density</div>
+  </div>
+  
+  <!-- ===== COSMOLOGY CALC ===== -->
+  <div class="calc-popup" id="calc-cosm">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('cosm')">✕</button>
+    <h3>🌌 Cosmology</h3>
+    <div class="calc-row"><label>H₀ (km/s/Mpc):</label><input type="number" id="cosm-h0" value="70" onchange="CHEMVENTUR.EnvCalc.calcCosm()"></div>
+    <div class="calc-row"><label>Ω_matter:</label><input type="number" id="cosm-omega" value="0.3" step="0.01" onchange="CHEMVENTUR.EnvCalc.calcCosm()"></div>
+    <div class="calc-row"><label>Ω_lambda:</label><input type="number" id="cosm-lambda" value="0.7" step="0.01" onchange="CHEMVENTUR.EnvCalc.calcCosm()"></div>
+    <div class="calc-row"><label>Universe Age:</label><input type="text" id="cosm-age" readonly></div>
+    <div class="calc-info" id="cosm-info">Flat universe</div>
+  </div>
+  
+  <!-- ===== QUANTUM CALC ===== -->
+  <div class="calc-popup" id="calc-quantum">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('quantum')">✕</button>
+    <h3>⚛️ Quantum Mechanics</h3>
+    <div class="calc-row"><label>n (principal):</label><input type="number" id="quantum-n" value="1" min="1" max="7" onchange="CHEMVENTUR.EnvCalc.calcQuantum()"></div>
+    <div class="calc-row"><label>l (angular):</label><input type="number" id="quantum-l" value="0" min="0" max="6" onchange="CHEMVENTUR.EnvCalc.calcQuantum()"></div>
+    <div class="calc-row"><label>Energy (eV):</label><input type="text" id="quantum-e" readonly></div>
+    <div class="calc-row"><label>Orbital:</label><input type="text" id="quantum-orbital" readonly></div>
+    <div class="calc-info">Hydrogen-like energy levels</div>
+  </div>
+  
+  <!-- ===== RELATIVITY CALC ===== -->
+  <div class="calc-popup" id="calc-rel">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('rel')">✕</button>
+    <h3>🚀 Special Relativity</h3>
+    <div class="calc-row"><label>Velocity (v/c):</label><input type="range" id="rel-v" min="0" max="0.9999" step="0.0001" value="0" oninput="CHEMVENTUR.EnvCalc.calcRel()"></div>
+    <div class="calc-row"><label>γ (gamma):</label><input type="text" id="rel-gamma" readonly></div>
+    <div class="calc-row"><label>Time dilation:</label><input type="text" id="rel-time" readonly></div>
+    <div class="calc-row"><label>Length:</label><input type="text" id="rel-length" readonly></div>
+    <div class="calc-info" id="rel-info">Non-relativistic</div>
+  </div>
+  
+  <!-- ===== PARTICLE CALC ===== -->
+  <div class="calc-popup" id="calc-particle">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('particle')">✕</button>
+    <h3>🔬 Particle Physics</h3>
+    <div class="calc-row"><label>Particle:</label>
+      <select id="particle-type" onchange="CHEMVENTUR.EnvCalc.calcParticle()">
+        <option value="electron">Electron</option>
+        <option value="positron">Positron</option>
+        <option value="proton">Proton</option>
+        <option value="neutron">Neutron</option>
+        <option value="muon">Muon</option>
+        <option value="tau">Tau</option>
+        <option value="pion">Pion</option>
+        <option value="kaon">Kaon</option>
+        <option value="wboson">W Boson</option>
+        <option value="zboson">Z Boson</option>
+        <option value="higgs">Higgs</option>
+      </select>
+    </div>
+    <div class="calc-row"><label>Mass:</label><input type="text" id="particle-mass" readonly></div>
+    <div class="calc-row"><label>Charge:</label><input type="text" id="particle-charge" readonly></div>
+    <div class="calc-info">Standard Model particles</div>
+  </div>
+  
+  <!-- ===== ASTRO CALC ===== -->
+  <div class="calc-popup" id="calc-astro">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('astro')">✕</button>
+    <h3>⭐ Astronomy</h3>
+    <div class="calc-row"><label>AU:</label><input type="number" id="astro-au" value="1" step="0.1" onchange="CHEMVENTUR.EnvCalc.calcAstro()"></div>
+    <div class="calc-row"><label>Kilometers:</label><input type="text" id="astro-km" readonly></div>
+    <div class="calc-row"><label>Light-years:</label><input type="text" id="astro-ly" readonly></div>
+    <div class="calc-row"><label>Parsecs:</label><input type="text" id="astro-pc" readonly></div>
+    <div class="calc-info" id="astro-info">Inner planets</div>
+  </div>
+  
+  <!-- ===== CHEMISTRY CALC ===== -->
+  <div class="calc-popup" id="calc-chem">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('chem')">✕</button>
+    <h3>🧪 Chemistry</h3>
+    <div class="calc-row"><label>Moles:</label><input type="number" id="chem-mol" value="1" step="0.1" onchange="CHEMVENTUR.EnvCalc.calcChem()"></div>
+    <div class="calc-row"><label>Particles:</label><input type="text" id="chem-particles" readonly></div>
+    <div class="calc-row"><label>Mass H₂O:</label><input type="text" id="chem-mass-h2o" readonly></div>
+    <div class="calc-info">N_A = 6.022 × 10²³</div>
+  </div>
+  
+  <!-- ===== BIOLOGY CALC ===== -->
+  <div class="calc-popup" id="calc-bio">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('bio')">✕</button>
+    <h3>🧬 Biology</h3>
+    <div class="calc-row"><label>ATP molecules (mol):</label><input type="number" id="bio-atp" value="1" step="0.1" onchange="CHEMVENTUR.EnvCalc.calcBio()"></div>
+    <div class="calc-row"><label>Energy (kJ):</label><input type="text" id="bio-energy" readonly></div>
+    <div class="calc-row"><label>Calories:</label><input type="text" id="bio-cal" readonly></div>
+    <div class="calc-info">ATP hydrolysis: ~30.5 kJ/mol</div>
+  </div>
+  
+  <!-- ===== GEO CALC ===== -->
+  <div class="calc-popup" id="calc-geo">
+    <button class="close-calc" onclick="CHEMVENTUR.UI.closeCalc('geo')">✕</button>
+    <h3>🌍 Geophysics</h3>
+    <div class="calc-row"><label>Depth (km):</label><input type="range" id="geo-depth" min="0" max="6371" value="0" oninput="CHEMVENTUR.EnvCalc.calcGeo()"></div>
+    <div class="calc-row"><label>Temperature:</label><input type="text" id="geo-temp" readonly></div>
+    <div class="calc-row"><label>Pressure:</label><input type="text" id="geo-press" readonly></div>
+    <div class="calc-info" id="geo-info">Crust</div>
+  </div>
+  
+  <!-- Other popups -->
+  <div id="gun-options-panel" class="popup-panel">
+    <button class="btn popup-close" onclick="CHEMVENTUR.UI.closeGunOptions()">✕</button>
+    <h3 id="gun-options-title">Gun Options</h3>
+    <div id="gun-options-content"></div>
+  </div>
+  
+  <div id="gravity-options-panel" class="popup-panel">
+    <button class="btn popup-close" onclick="CHEMVENTUR.UI.closeGravityOptions()">✕</button>
+    <h3>🌍 Gravity Options</h3>
+    <div id="gravity-options-content"></div>
+  </div>
+  
+  <div id="rain-options-panel" class="popup-panel">
+    <button class="btn popup-close" onclick="CHEMVENTUR.UI.closeRainOptions()">✕</button>
+    <h3>🌧️ Rain Options</h3>
+    <div id="rain-options-content"></div>
+  </div>
+  
+  <div id="grid-options-panel" class="popup-panel">
+    <button class="btn popup-close" onclick="CHEMVENTUR.UI.closeGridOptions()">✕</button>
+    <h3>🗺️ Grid Layers</h3>
+    <div id="grid-options-content"></div>
+  </div>
+  
+  <!-- ===== 🔬 PUBCHEM SEARCH PANEL ===== -->
+  <div id="pubchem-panel" class="popup-panel" style="width:380px;">
+    <button class="btn popup-close" onclick="CHEMVENTUR.UI.closePubChemSearch()">✕</button>
+    <h3 style="color:#00ff41;">🔬 PubChem Molecule Search</h3>
+    <div style="display:flex;gap:5px;margin-bottom:10px;">
+      <input type="text" id="pubchem-search" placeholder="Search: caffeine, glucose, THC..." 
+             style="flex:1;padding:8px;background:#001100;border:2px solid #00ff41;color:#0f0;border-radius:5px;"
+             oninput="CHEMVENTUR.UI.searchPubChem()"
+             onkeypress="if(event.key==='Enter')CHEMVENTUR.UI.searchPubChemLive()">
+      <button class="btn" onclick="CHEMVENTUR.UI.searchPubChemLive()" title="Live API Search" style="background:#00ffff;color:#000;">🌐</button>
+      <button class="btn" onclick="CHEMVENTUR.UI.showRandomPubChem()" title="Random">🎲</button>
+    </div>
+    <div style="font-size:8px;color:#666;margin-bottom:8px;">
+      📦 Local = instant | 🌐 = Live PubChem API (needs network)
+    </div>
+    <div id="pubchem-results" style="max-height:280px;overflow-y:auto;font-size:11px;">
+      <div style="color:#888;">Search molecules by name, formula, or browse categories...</div>
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:3px;">
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='water';CHEMVENTUR.UI.searchPubChem()">💧 Water</button>
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='caffeine';CHEMVENTUR.UI.searchPubChem()">☕ Caffeine</button>
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='dopamine';CHEMVENTUR.UI.searchPubChem()">🧠 Dopamine</button>
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='glucose';CHEMVENTUR.UI.searchPubChem()">🍬 Glucose</button>
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='aspirin';CHEMVENTUR.UI.searchPubChem()">💊 Aspirin</button>
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='benzene';CHEMVENTUR.UI.searchPubChem()">⬡ Benzene</button>
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='ethanol';CHEMVENTUR.UI.searchPubChem()">🍺 Ethanol</button>
+        <button class="btn" style="font-size:8px;padding:3px 6px;" onclick="document.getElementById('pubchem-search').value='ammonia';CHEMVENTUR.UI.searchPubChem()">💨 Ammonia</button>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:8px;color:#666;text-align:center;">
+      📦 Local: 60+ compounds | 🌐 API: 100M+ compounds<br>
+      <span style="color:#00ff41;">★ Real 2D structures with bonds!</span>
+    </div>
+  </div>
+  
+  <div id="periodic-table-panel" class="popup-panel">
+    <button class="btn popup-close" onclick="CHEMVENTUR.UI.closePeriodicTable()">✕</button>
+    <h3>⚛️ Select Element</h3>
+    <div id="pt-grid"></div>
+    <div class="mt-md text-center">Selected: <span id="pt-selected" style="color:#0f0;">H</span></div>
+  </div>
+  
+  <!-- ===== MEGA PERIODIC TABLE ===== -->
+  <div id="periodic-table-full">
+    <button class="close-pt" onclick="CHEMVENTUR.UI.closePeriodicTableFull()">✕</button>
+    <h2>⚛️ PERIODIC TABLE OF ELEMENTS ⚛️</h2>
+    
+    <!-- Legend -->
+    <div class="pt-legend">
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#ff6b6b"></div>Alkali Metal</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#feca57"></div>Alkaline Earth</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#ff9ff3"></div>Transition Metal</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#54a0ff"></div>Post-Transition</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#5f27cd"></div>Metalloid</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#00d2d3"></div>Nonmetal</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#ff00ff"></div>Noble Gas</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#ff9f43"></div>Lanthanide</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#ee5a24"></div>Actinide</div>
+      <div class="pt-legend-item"><div class="pt-legend-color" style="background:#576574"></div>Unknown</div>
+    </div>
+    
+    <!-- Grid will be built by JS -->
+    <div class="pt-grid-full" id="pt-grid-full"></div>
+    
+    <div style="text-align:center;margin-top:10px;font-size:11px;color:#888;">
+      Click any element for details! • All 118 elements included! • 🔬 Science is awesome! 🔬
+    </div>
+  </div>
+  
+  <!-- ===== ELEMENT DETAIL POPUP ===== -->
+  <div id="element-detail">
+    <button class="close-detail" onclick="CHEMVENTUR.UI.closeElementDetail()">✕</button>
+    <div id="element-detail-content"></div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/holes.js"></script>
+  <script src="js/guns.js"></script>
+  <script src="js/grid.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/audioSystem.js"></script>
+  <script src="js/soundPhysics.js"></script>
+  <script src="js/envCalc.js"></script>
+  <script src="js/periodicTableFull.js"></script>
+  <script src="js/molecular.js"></script>
+  <script src="js/strings.js"></script>
+  <script src="js/shipRepair.js"></script>
+  <script src="js/enhancements.js"></script>
+  <script src="js/multiplayer.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/molecule-rain.js"></script>
+  <script src="js/molecule-structures.js"></script>
+  <script src="js/pubchem.js"></script>
+  <script src="js/pubchem-api.js"></script>
+</body>
+</html>

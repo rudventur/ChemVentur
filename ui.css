@@ -1,0 +1,652 @@
+/* ============================================
+   CHEMVENTUR v107 - UI STYLES
+   Left panel, buttons, inputs, popups
+   🎵 NOW WITH AUDIO PANEL STYLES! 🎵
+   ============================================ */
+
+/* ===== LEFT PANEL ===== */
+#left-panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--panel-width);
+  background: linear-gradient(180deg, var(--bg-secondary), rgba(0, 10, 0, 0.75));
+  border-right: 3px solid var(--neon-green);
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
+}
+
+/* ===== INFO WINDOWS ===== */
+.info-window {
+  background: var(--bg-panel);
+  border: 2px solid var(--neon-green);
+  padding: 6px;
+  margin-top: 6px;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.info-window.compact {
+  padding: 4px;
+  font-size: var(--font-size-xs);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  background: var(--bg-input);
+  color: var(--neon-green);
+  border: 2px solid var(--neon-green);
+  padding: 4px 7px;
+  cursor: pointer;
+  border-radius: var(--border-radius-sm);
+  margin: 2px;
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--neon-green);
+  color: var(--bg-primary);
+  box-shadow: var(--glow-neon);
+}
+
+.btn.selected,
+.btn.active {
+  background: var(--neon-green);
+  color: var(--bg-primary);
+  box-shadow: var(--glow-neon);
+}
+
+.btn.small {
+  padding: 2px 5px;
+  font-size: var(--font-size-xs);
+}
+
+.btn.large {
+  padding: 8px 14px;
+  font-size: var(--font-size-lg);
+}
+
+.btn.full-width {
+  width: 100%;
+  margin: 4px 0;
+}
+
+.btn.danger {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.btn.danger:hover {
+  background: var(--color-danger);
+  color: white;
+}
+
+/* ===== GUN SELECTOR ===== */
+#gun-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 4px 0;
+}
+
+.gun-btn {
+  background: var(--bg-input);
+  color: var(--neon-green);
+  border: 2px solid var(--neon-green);
+  padding: 2px 5px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-family: var(--font-main);
+  font-size: var(--font-size-xs);
+  transition: var(--transition-fast);
+}
+
+.gun-btn:hover {
+  background: var(--neon-green);
+  color: var(--bg-primary);
+}
+
+.gun-btn.active {
+  background: var(--neon-green);
+  color: var(--bg-primary);
+  box-shadow: var(--glow-neon);
+}
+
+/* Gun type colors */
+.gun-btn[data-gun="1"] { border-color: var(--color-proton); }
+.gun-btn[data-gun="2"] { border-color: var(--color-neutron); }
+.gun-btn[data-gun="3"] { border-color: var(--color-electron); }
+.gun-btn[data-gun="6"] { border-color: var(--color-shotgun); }
+.gun-btn[data-gun="7"] { border-color: var(--color-ebeam); }
+.gun-btn[data-gun="8"] { border-color: var(--color-antigun); }
+.gun-btn[data-gun="9"] { border-color: var(--color-gravity); }
+.gun-btn[data-gun="0"] { border-color: var(--color-timezone); }
+
+/* ===== INPUTS ===== */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 6px;
+  background: var(--bg-input);
+  border: 1px solid var(--neon-green);
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--neon-green);
+  border-radius: 50%;
+  margin-top: -4px;
+  box-shadow: 0 0 8px var(--neon-green);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: var(--bg-input);
+  border: 1px solid var(--neon-green);
+  border-radius: 3px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--neon-green);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--neon-green);
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--neon-green);
+  cursor: pointer;
+}
+
+input[type="color"] {
+  width: 30px;
+  height: 22px;
+  border: 2px solid var(--neon-green);
+  border-radius: var(--border-radius-sm);
+  background: var(--bg-input);
+  cursor: pointer;
+  padding: 0;
+}
+
+input[type="text"], input[type="url"] {
+  background: var(--bg-input);
+  color: var(--neon-green);
+  border: 2px solid var(--neon-green);
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus, input[type="url"]:focus {
+  outline: none;
+  box-shadow: var(--glow-neon);
+}
+
+select {
+  background: var(--bg-input);
+  color: var(--neon-green);
+  border: 2px solid var(--neon-green);
+  padding: 3px 6px;
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: var(--glow-neon);
+}
+
+/* ===== INVENTORY ===== */
+#inventory {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 3px;
+}
+
+.inventory-item {
+  font-size: var(--font-size-sm);
+  padding: 2px 4px;
+}
+
+/* ===== STATS BOX ===== */
+#stats {
+  font-size: var(--font-size-sm);
+  color: #888;
+  padding: 4px;
+  background: var(--bg-hover);
+  border-radius: var(--border-radius-sm);
+  margin-top: 5px;
+}
+
+/* ===== STATUS BAR ===== */
+#status-bar {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 255, 65, 0.95);
+  color: var(--bg-primary);
+  padding: 8px 16px;
+  border-radius: var(--border-radius-md);
+  font-weight: bold;
+  z-index: 200;
+  box-shadow: var(--glow-neon-strong);
+}
+
+#status-bar.visible {
+  display: block;
+}
+
+/* ===== POPUP PANELS ===== */
+.popup-panel {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-input));
+  border: 3px solid var(--neon-green);
+  padding: 15px;
+  border-radius: var(--border-radius-lg);
+  z-index: 150;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow: var(--shadow-panel);
+}
+
+.popup-panel.visible {
+  display: block;
+}
+
+.popup-panel h3 {
+  color: var(--neon-green);
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.popup-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+/* ===== GUN OPTIONS PANEL ===== */
+#gun-options-panel {
+  min-width: 280px;
+}
+
+.gun-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-size: var(--font-size-md);
+  padding: 4px;
+  background: var(--bg-hover);
+  border-radius: var(--border-radius-sm);
+}
+
+.gun-option label {
+  flex: 1;
+  min-width: 60px;
+}
+
+.gun-option input[type="range"] {
+  width: 80px;
+}
+
+.gun-option .value-display {
+  min-width: 30px;
+  text-align: right;
+  color: var(--neon-green);
+  font-weight: bold;
+}
+
+/* ===== PERIODIC TABLE PANEL ===== */
+#periodic-table-panel {
+  min-width: 480px;
+}
+
+#pt-grid {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  gap: 1px;
+}
+
+.pt-element {
+  background: var(--bg-input);
+  border: 1px solid var(--neon-green);
+  padding: 2px;
+  text-align: center;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  border-radius: 2px;
+  transition: var(--transition-fast);
+}
+
+.pt-element:hover {
+  background: var(--neon-green);
+  color: var(--bg-primary);
+  transform: scale(1.1);
+}
+
+.pt-element.empty {
+  visibility: hidden;
+}
+
+.pt-element .symbol {
+  font-weight: bold;
+}
+
+.pt-element .number {
+  font-size: 7px;
+  opacity: 0.6;
+}
+
+/* Element group colors */
+.pt-element.noble { border-color: var(--color-positron); }
+.pt-element.alkali { border-color: var(--color-proton); }
+.pt-element.halogen { border-color: #ffff00; }
+.pt-element.transition { border-color: var(--color-shotgun); }
+.pt-element.nonmetal { border-color: var(--color-electron); }
+
+/* ===== TARGET BOX ===== */
+#target-box {
+  font-size: var(--font-size-md);
+  padding: 4px 6px;
+  background: var(--bg-hover);
+  border-radius: var(--border-radius-sm);
+  margin: 3px 0;
+}
+
+#target-text {
+  color: var(--neon-green);
+  font-weight: bold;
+}
+
+/* ===== ENV BUTTON (now in panel, not fixed) ===== */
+/* Removed fixed positioning - env-btn is now a regular button in the left panel */
+
+/* ================================================
+   🎵 AUDIO PANEL STYLES (NEW!) 🎵
+   ================================================ */
+
+#env-panel {
+  position: fixed;
+  bottom: 70px;
+  right: 15px;
+  width: 320px;
+  background: linear-gradient(135deg, var(--bg-primary), rgba(0, 20, 0, 0.95));
+  border: 3px solid var(--neon-green);
+  border-radius: var(--border-radius-lg);
+  padding: 15px;
+  z-index: 90;
+  display: none;
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+}
+
+#env-panel.visible {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#env-panel h3 {
+  color: var(--neon-green);
+  margin: 0 0 10px 0;
+  text-align: center;
+  text-shadow: 0 0 10px var(--neon-green);
+}
+
+/* Audio Section */
+.audio-section {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.audio-section h4 {
+  color: var(--neon-green);
+  margin: 0 0 8px 0;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Audio URL Input */
+.audio-url-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.audio-url-row input {
+  flex: 1;
+  font-size: 9px;
+}
+
+/* Audio Controls */
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.audio-controls .btn {
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+#audio-time {
+  font-size: 9px;
+  color: #888;
+}
+
+/* Volume Slider */
+.volume-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+}
+
+.volume-row input[type="range"] {
+  flex: 1;
+}
+
+/* Equalizer Section */
+.eq-section {
+  margin-top: 10px;
+}
+
+.eq-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+  font-size: 9px;
+}
+
+.eq-row label {
+  width: 40px;
+  text-align: right;
+}
+
+.eq-row input[type="range"] {
+  flex: 1;
+  height: 4px;
+}
+
+.eq-row .eq-val {
+  width: 35px;
+  text-align: left;
+  color: var(--neon-green);
+}
+
+/* EQ Band Colors */
+.eq-row.high label { color: #00ffff; }
+.eq-row.mid label { color: #00ff41; }
+.eq-row.bass label { color: #ff3333; }
+.eq-row.sub label { color: #8800ff; }
+
+.eq-row.high input::-webkit-slider-thumb { background: #00ffff; }
+.eq-row.mid input::-webkit-slider-thumb { background: #00ff41; }
+.eq-row.bass input::-webkit-slider-thumb { background: #ff3333; }
+.eq-row.sub input::-webkit-slider-thumb { background: #8800ff; }
+
+/* Sound Physics Toggles */
+.physics-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.physics-toggles .btn {
+  font-size: 8px;
+  padding: 3px 6px;
+}
+
+/* File Upload */
+.file-upload-row {
+  margin-top: 8px;
+}
+
+.file-upload-row input[type="file"] {
+  font-size: 9px;
+  color: var(--neon-green);
+}
+
+.file-upload-row input[type="file"]::file-selector-button {
+  background: var(--bg-input);
+  color: var(--neon-green);
+  border: 1px solid var(--neon-green);
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 8px;
+}
+
+.file-upload-row input[type="file"]::file-selector-button:hover {
+  background: var(--neon-green);
+  color: var(--bg-primary);
+}
+
+/* Sound → Physics Legend */
+.sound-legend {
+  font-size: 8px;
+  color: #888;
+  margin-top: 10px;
+  padding: 5px;
+  background: rgba(0, 255, 65, 0.05);
+  border-radius: 4px;
+}
+
+.sound-legend div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 2px 0;
+}
+
+.sound-legend .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sound-legend .dot.high { background: #00ffff; }
+.sound-legend .dot.mid { background: #00ff41; }
+.sound-legend .dot.bass { background: #ff3333; }
+.sound-legend .dot.sub { background: #8800ff; }
+
+/* ===== TOOLTIPS ===== */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-primary);
+  color: var(--neon-green);
+  padding: 4px 8px;
+  border: 1px solid var(--neon-green);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  #gun-selector {
+    gap: 1px;
+  }
+  
+  .gun-btn {
+    padding: 1px 3px;
+    font-size: 7px;
+  }
+  
+  .popup-panel {
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  #periodic-table-panel {
+    min-width: auto;
+  }
+  
+  #pt-grid {
+    grid-template-columns: repeat(9, 1fr);
+  }
+  
+  #env-panel {
+    width: 280px;
+    right: 10px;
+  }
+}

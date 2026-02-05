@@ -1,0 +1,430 @@
+/* ============================================
+   CHEMVENTUR v106 - EFFECTS & ANIMATIONS
+   Visual effects, particles, and animations
+   ============================================ */
+
+/* ===== KEYFRAME ANIMATIONS ===== */
+
+/* Floating animation for ENV button */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(5deg);
+  }
+}
+
+/* Pulse animation for active elements */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+/* Glow pulse for important elements */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--neon-green);
+  }
+  50% {
+    box-shadow: 0 0 25px var(--neon-green), 0 0 35px var(--neon-green-glow);
+  }
+}
+
+/* Spin animation for loading states */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Spiral inward (for black holes) */
+@keyframes spiral-in {
+  0% {
+    transform: rotate(0deg) translateX(50px);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(720deg) translateX(0);
+    opacity: 0;
+  }
+}
+
+/* Spiral outward (for white holes) */
+@keyframes spiral-out {
+  0% {
+    transform: rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(720deg) translateX(50px);
+    opacity: 1;
+  }
+}
+
+/* Ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Shake for warnings */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade out */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Zoom in */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ===== ANIMATION CLASSES ===== */
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-fade-out {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 0.3s ease-out forwards;
+}
+
+/* ===== PARTICLE EFFECTS ===== */
+
+/* Proton glow */
+.effect-proton {
+  background: radial-gradient(circle, var(--color-proton), transparent);
+  box-shadow: 0 0 15px var(--color-proton);
+}
+
+/* Neutron subtle glow */
+.effect-neutron {
+  background: radial-gradient(circle, var(--color-neutron), transparent);
+  box-shadow: 0 0 10px rgba(200, 200, 200, 0.5);
+}
+
+/* Electron bright glow */
+.effect-electron {
+  background: radial-gradient(circle, var(--color-electron), transparent);
+  box-shadow: 0 0 12px var(--color-electron);
+}
+
+/* Positron antimatter glow */
+.effect-positron {
+  background: radial-gradient(circle, var(--color-positron), transparent);
+  box-shadow: 0 0 20px var(--color-positron);
+}
+
+/* ===== HOLE EFFECTS ===== */
+
+/* Black hole event horizon */
+.effect-blackhole {
+  background: radial-gradient(circle, 
+    #000000 0%, 
+    rgba(50, 0, 100, 0.8) 30%, 
+    rgba(100, 0, 150, 0.3) 70%, 
+    transparent 100%
+  );
+}
+
+/* White hole radiance */
+.effect-whitehole {
+  background: radial-gradient(circle,
+    #ffffff 0%,
+    rgba(255, 255, 200, 0.8) 30%,
+    rgba(255, 255, 150, 0.3) 70%,
+    transparent 100%
+  );
+}
+
+/* ===== GUN EFFECTS ===== */
+
+/* Shotgun spread indicator */
+.effect-shotgun-spread {
+  border: 2px dashed var(--color-shotgun);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+/* E-beam trail */
+.effect-ebeam {
+  background: linear-gradient(to bottom, 
+    var(--color-ebeam), 
+    transparent
+  );
+  opacity: 0.6;
+}
+
+/* Gravity orb */
+.effect-gravity-orb {
+  background: radial-gradient(circle,
+    var(--color-gravity) 0%,
+    rgba(136, 0, 255, 0.6) 30%,
+    rgba(136, 0, 255, 0.3) 70%,
+    transparent 100%
+  );
+}
+
+/* Time zone ripple */
+.effect-time-zone {
+  border: 2px solid var(--color-timezone);
+  border-radius: 50%;
+  animation: ripple 2s ease-out infinite;
+}
+
+/* ===== TRAIL EFFECTS ===== */
+
+.trail {
+  position: absolute;
+  pointer-events: none;
+}
+
+.trail-photon {
+  background: linear-gradient(to left, #ffff00, transparent);
+}
+
+.trail-tachyon {
+  background: linear-gradient(to left, #ff00ff, transparent);
+}
+
+.trail-antimatter {
+  background: linear-gradient(to left, #ff0000, transparent);
+}
+
+/* ===== GRID EFFECTS ===== */
+
+/* Pressure grid cell */
+.grid-cell {
+  stroke: var(--neon-green);
+  fill: none;
+  stroke-width: 1;
+  opacity: 0.2;
+}
+
+.grid-cell.high-pressure {
+  opacity: 0.5;
+  stroke-width: 2;
+}
+
+.grid-cell.low-pressure {
+  opacity: 0.1;
+  stroke-dasharray: 2 2;
+}
+
+/* Compass needle */
+.compass-needle {
+  stroke: var(--color-shotgun);
+  stroke-width: 1.5;
+}
+
+.compass-north {
+  fill: #ff0000;
+}
+
+/* ===== STATUS EFFECTS ===== */
+
+/* Success flash */
+.flash-success {
+  animation: flash-green 0.5s ease-out;
+}
+
+@keyframes flash-green {
+  0% { background-color: rgba(0, 255, 65, 0.5); }
+  100% { background-color: transparent; }
+}
+
+/* Danger flash */
+.flash-danger {
+  animation: flash-red 0.5s ease-out;
+}
+
+@keyframes flash-red {
+  0% { background-color: rgba(255, 0, 68, 0.5); }
+  100% { background-color: transparent; }
+}
+
+/* Warning flash */
+.flash-warning {
+  animation: flash-orange 0.5s ease-out;
+}
+
+@keyframes flash-orange {
+  0% { background-color: rgba(255, 170, 0, 0.5); }
+  100% { background-color: transparent; }
+}
+
+/* ===== TRANSITION CLASSES ===== */
+
+.transition-all {
+  transition: all var(--transition-normal);
+}
+
+.transition-fast {
+  transition: all var(--transition-fast);
+}
+
+.transition-slow {
+  transition: all var(--transition-slow);
+}
+
+/* ===== HOVER EFFECTS ===== */
+
+.hover-grow:hover {
+  transform: scale(1.05);
+}
+
+.hover-glow:hover {
+  box-shadow: var(--glow-neon);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 65, 0.3);
+}
+
+/* ===== SPECIAL EFFECTS ===== */
+
+/* Annihilation burst */
+.effect-annihilation {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle,
+    #ffffff 0%,
+    #ff00ff 30%,
+    #ff0000 60%,
+    transparent 100%
+  );
+  animation: annihilation 0.5s ease-out forwards;
+}
+
+@keyframes annihilation {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Fusion glow */
+.effect-fusion {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    #ffffff 0%,
+    #ffff00 30%,
+    #ff8800 60%,
+    transparent 100%
+  );
+  animation: fusion 0.8s ease-out forwards;
+}
+
+@keyframes fusion {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* ===== LOADING STATES ===== */
+
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--neon-green);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}

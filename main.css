@@ -1,0 +1,252 @@
+/* ============================================
+   CHEMVENTUR v106 - MAIN STYLES
+   Core styling, variables, and base elements
+   ============================================ */
+
+/* ===== CSS VARIABLES ===== */
+:root {
+  /* Background & Panel Colors */
+  --bg-primary: #001100;
+  --bg-secondary: #031107;
+  --bg-panel: rgba(0, 10, 0, 0.85);
+  --bg-input: #002200;
+  --bg-hover: rgba(0, 255, 65, 0.1);
+  
+  /* Neon Theme Colors */
+  --neon-green: #00ff41;
+  --neon-green-dim: #00aa2a;
+  --neon-green-glow: rgba(0, 255, 65, 0.5);
+  
+  /* Particle Colors */
+  --color-proton: #ff3333;
+  --color-neutron: #cccccc;
+  --color-electron: #3388ff;
+  --color-positron: #ff00ff;
+  --color-nucleus: #ffaa00;
+  
+  /* Hole Colors */
+  --color-blackhole: #000000;
+  --color-whitehole: #ffffff;
+  --color-event-horizon: #440088;
+  
+  /* Gun Colors */
+  --color-shotgun: #ff8800;
+  --color-ebeam: #00ffff;
+  --color-antigun: #ff00ff;
+  --color-gravity: #8800ff;
+  --color-timezone: #00ffaa;
+  
+  /* UI Colors */
+  --color-danger: #ff0044;
+  --color-warning: #ffaa00;
+  --color-success: #00ff41;
+  
+  /* ENV Calculator Colors */
+  --env-temp: #ff6600;
+  --env-press: #00ccff;
+  --env-grav: #ffff00;
+  --env-rad: #ff00ff;
+  --env-elec: #00ffff;
+  --env-mag: #ff0088;
+  --env-em: #88ff00;
+  --env-dm: #8800ff;
+  
+  /* Sizing */
+  --panel-width: 360px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 10px;
+  
+  /* Typography */
+  --font-main: "Courier New", monospace;
+  --font-size-xs: 8px;
+  --font-size-sm: 9px;
+  --font-size-md: 10px;
+  --font-size-lg: 12px;
+  --font-size-xl: 15px;
+  --font-size-title: 18px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  
+  /* Shadows & Glows */
+  --glow-neon: 0 0 15px var(--neon-green);
+  --glow-neon-strong: 0 0 25px var(--neon-green);
+  --shadow-panel: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-primary);
+  color: var(--neon-green);
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  line-height: 1.4;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-green-dim);
+  border-radius: var(--border-radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-green);
+}
+
+/* ===== CANVAS ===== */
+canvas#game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: crisp-edges;
+  position: relative;
+  z-index: 5;
+}
+
+#canvas-container {
+  position: absolute;
+  left: var(--panel-width);
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--bg-primary);
+  z-index: 2;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1 {
+  font-size: var(--font-size-title);
+  color: var(--neon-green);
+  text-align: center;
+  text-shadow: var(--glow-neon);
+  margin: 4px 0;
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  color: var(--neon-green);
+  text-shadow: 0 0 10px var(--neon-green);
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+  color: var(--neon-green);
+  margin-bottom: 8px;
+}
+
+/* ===== SELECTION ===== */
+::selection {
+  background: var(--neon-green);
+  color: var(--bg-primary);
+}
+
+/* ===== LINKS ===== */
+a {
+  color: var(--neon-green);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  text-shadow: var(--glow-neon);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.hidden {
+  display: none !important;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gap-xs { gap: 2px; }
+.gap-sm { gap: 4px; }
+.gap-md { gap: 8px; }
+.gap-lg { gap: 12px; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.mt-xs { margin-top: 2px; }
+.mt-sm { margin-top: 4px; }
+.mt-md { margin-top: 8px; }
+.mt-lg { margin-top: 12px; }
+
+.mb-xs { margin-bottom: 2px; }
+.mb-sm { margin-bottom: 4px; }
+.mb-md { margin-bottom: 8px; }
+.mb-lg { margin-bottom: 12px; }
+
+.p-xs { padding: 2px; }
+.p-sm { padding: 4px; }
+.p-md { padding: 8px; }
+.p-lg { padding: 12px; }
+
+/* ===== NEON TEXT EFFECTS ===== */
+.neon-text {
+  text-shadow: var(--glow-neon);
+}
+
+.neon-text-strong {
+  text-shadow: var(--glow-neon-strong);
+}
+
+/* Color variants */
+.text-proton { color: var(--color-proton); }
+.text-neutron { color: var(--color-neutron); }
+.text-electron { color: var(--color-electron); }
+.text-positron { color: var(--color-positron); }
+.text-warning { color: var(--color-warning); }
+.text-danger { color: var(--color-danger); }
+.text-dim { color: #666; }
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 768px) {
+  :root {
+    --panel-width: 280px;
+    --font-size-md: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --panel-width: 100%;
+  }
+  
+  #canvas-container {
+    left: 0;
+    top: 200px;
+  }
+}
