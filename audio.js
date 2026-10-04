@@ -10,7 +10,6 @@
     ctx: null,
     enabled: true,
     
-    // Initialize audio context
     init() {
       try {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -21,14 +20,12 @@
       }
     },
     
-    // Resume audio context (needed after user interaction)
     resume() {
       if (this.ctx && this.ctx.state === 'suspended') {
         this.ctx.resume();
       }
     },
     
-    // Play a simple beep/boop sound
     boop(frequency = 440, duration = 0.08, type = 'square', volume = null) {
       if (!this.enabled || !this.ctx) return;
       
@@ -52,91 +49,42 @@
       }
     },
     
-    // ===== PREDEFINED SOUNDS =====
-    
-    // Shoot sound
-    shoot() {
-      this.boop(600, 0.1);
-    },
-    
-    // Gun select sound
-    gunSelect(gunId) {
-      this.boop(440 + gunId * 50, 0.08);
-    },
-    
-    // Fusion sound
-    fusion(newZ) {
-      this.boop(800 + newZ * 5, 0.15, 'sine');
-    },
-    
-    // Nucleus formation
-    nucleusFormed() {
-      this.boop(700, 0.15);
-    },
-    
-    // Electron captured
-    electronCaptured() {
-      this.boop(600, 0.1);
-    },
-    
-    // Annihilation (e+ e-)
-    annihilation() {
-      this.boop(900, 0.3, 'sawtooth');
-    },
-    
-    // Black hole formed
-    blackHoleFormed() {
-      this.boop(200, 0.3);
-    },
-    
-    // White hole formed
-    whiteHoleFormed() {
-      this.boop(400, 0.3, 'sine');
-    },
-    
-    // Hole merged
-    holeMerged() {
-      this.boop(150, 0.4);
-    },
-    
-    // Gravity orb launched
-    gravityOrb() {
-      this.boop(200, 0.2, 'sine');
-    },
-    
-    // Time zone deployed
-    timeZone() {
-      this.boop(400, 0.15, 'triangle');
-    },
-    
-    // Target achieved
-    targetAchieved() {
-      this.boop(1000, 0.3, 'sine');
-    },
-    
-    // UI click
-    click() {
-      this.boop(500, 0.05);
-    },
-    
-    // Error/warning
-    warning() {
-      this.boop(200, 0.2, 'sawtooth', 0.08);
-    },
-    
-    // Success
-    success() {
-      this.boop(800, 0.15, 'sine');
-    },
-    
-    // Toggle audio
+    shoot() { this.boop(600, 0.1); },
+    gunSelect(gunId) { this.boop(440 + gunId * 50, 0.08); },
+    fusion(newZ) { this.boop(800 + newZ * 5, 0.15, 'sine'); },
+    nucleusFormed() { this.boop(700, 0.15); },
+    electronCaptured() { this.boop(600, 0.1); },
+    annihilation() { this.boop(900, 0.3, 'sawtooth'); },
+    blackHoleFormed() { this.boop(200, 0.3); },
+    whiteHoleFormed() { this.boop(400, 0.3, 'sine'); },
+    holeMerged() { this.boop(150, 0.4); },
+    gravityOrb() { this.boop(200, 0.2, 'sine'); },
+    timeZone() { this.boop(400, 0.15, 'triangle'); },
+    targetAchieved() { this.boop(1000, 0.3, 'sine'); },
+    click() { this.boop(500, 0.05); },
+    warning() { this.boop(200, 0.2, 'sawtooth', 0.08); },
+    success() { this.boop(800, 0.15, 'sine'); },
     toggle() {
       this.enabled = !this.enabled;
       return this.enabled;
     }
   };
   
-  // Initialize on load
   CHEMVENTUR.Audio.init();
-  
+})();
+
+(function () {
+  var icon = document.querySelector('link[rel="apple-touch-icon"]');
+  if (icon) icon.href = 'https://rudventur.github.io/RudVentur.com/embed/apple-touch-icon.png';
+  if (!document.getElementById('rxplanation-style')) {
+    var style = document.createElement('style');
+    style.id = 'rxplanation-style';
+    style.textContent = '#rxplanation{position:fixed;z-index:500;display:none;width:280px;max-width:calc(100vw - 16px);background:#041208;color:#d8ffe4;border:2px solid #00ff41;border-radius:8px;padding:10px 12px 12px;box-shadow:0 8px 28px rgba(0,0,0,.55)}#rxplanation .rx-title{font-weight:800;color:#00ff41;margin-bottom:6px}button,.btn,.gun-btn{position:relative;z-index:2;visibility:visible;opacity:1;pointer-events:auto;flex:0 0 auto}.flex.flex-wrap,#gun-selector{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.popup-panel{left:calc(var(--panel-width) + 20px);transform:translateY(-50%);max-width:min(520px, calc(100vw - var(--panel-width) - 36px))}@media (max-width:768px){.popup-panel{left:50%;top:auto;bottom:12px;transform:translateX(-50%);width:min(92vw,420px);max-height:55vh}}';
+    document.head.appendChild(style);
+  }
+  if (!document.querySelector('script[src="rxplanation.js"]')) {
+    var script = document.createElement('script');
+    script.src = 'rxplanation.js';
+    document.head.appendChild(script);
+  }
 })();
