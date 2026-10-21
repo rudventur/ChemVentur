@@ -44,21 +44,7 @@
 2. **Sign-in method** tab → **Anonymous** → **Enable** → **Save**
 
 ### Step 5: Configure CHEMVENTUR
-1. Open `js/multiplayer.js`
-2. Find `firebaseConfig` (around line 20)
-3. Replace with YOUR config:
-
-```javascript
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "chemventur-multi.firebaseapp.com",
-  databaseURL: "https://chemventur-multi-default-rtdb.firebaseio.com/",
-  projectId: "chemventur-multi",
-  storageBucket: "chemventur-multi.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123:web:abc123"
-};
-```
+`multiplayer.js` is already connected to the ChemVentur multiplayer project (`chemventurmulti117`). Only if you move to your own project: open `multiplayer.js`, find `firebaseConfig` near the top, and put your web app configuration there.
 
 ### Step 6: Upload to GitHub & Play!
 1. Upload all files to your repo

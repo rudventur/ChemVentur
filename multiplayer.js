@@ -9,26 +9,25 @@
    - Leaderboards
    - Presence (who's online)
    
-   Setup:
-   1. Create Firebase project at https://firebase.google.com
-   2. Enable Realtime Database (test mode)
-   3. Enable Anonymous Auth
-   4. Replace firebaseConfig below with yours
+   Backend: the ChemVentur multiplayer Firebase project (chemventurmulti117),
+   Realtime Database plus anonymous sign-in. To move to another project, put
+   its web app configuration in firebaseConfig below.
    ============================================ */
 
 (function() {
   
   // ========================================
-  // 🔥 FIREBASE CONFIG - REPLACE WITH YOURS!
+  // 🔥 FIREBASE CONFIG — the ChemVentur multiplayer project (chemventurmulti117),
+  // the same one ChemVentur v117, v118 and v120 use
   // ========================================
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com/",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123:web:abc123"
+    apiKey: "AIzaSyBVViPQjP9f1ZENFNXsCA7rs628FxDayMI",
+    authDomain: "chemventurmulti117.firebaseapp.com",
+    databaseURL: "https://chemventurmulti117-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "chemventurmulti117",
+    storageBucket: "chemventurmulti117.firebasestorage.app",
+    messagingSenderId: "323218594439",
+    appId: "1:323218594439:web:5ad5e95e896304de1af622"
   };
   
   // ========================================
@@ -66,7 +65,7 @@
       }
       
       // Check if config is set
-      if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+      if (!firebaseConfig.apiKey) {
         console.warn('🎮 Firebase not configured! Edit js/multiplayer.js with your config.');
         this.enabled = false;
         this.showSetupGuide();
@@ -75,30 +74,30 @@
       
       try {
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         this.db = firebase.database();
         this.auth = firebase.auth();
         
-        // Sign in anonymously
+        // Sign in anonymously. The chemventurmulti117 project has no sign-in provider
+        // switched on (ChemVentur v117/v118/v120 play without one), so when sign-in is
+        // not available the player gets a lasting id kept on this device instead.
+        const ready = uid => {
+          this.playerUid = uid;
+          this.playerName = (window.rvUserbox && rvUserbox.get().username) || ('Player' + uid.slice(-4));
+          this.enabled = true;
+          console.log('🎮 Multiplayer ready! Player id:', this.playerUid);
+          CHEMVENTUR.UI?.showStatus('🎮 Multiplayer connected!');
+          this.updateMultiplayerUI();
+        };
+        const deviceId = () => {
+          let id = localStorage.getItem('chemventur_player_id');
+          if (!id) { id = 'p_' + Array.from(crypto.getRandomValues(new Uint8Array(8)), b => b.toString(16).padStart(2, '0')).join(''); localStorage.setItem('chemventur_player_id', id); }
+          return id;
+        };
+        this.auth.onAuthStateChanged(user => { if (user) ready(user.uid); });
         this.auth.signInAnonymously().catch(err => {
-          console.error('🎮 Auth error:', err);
-          CHEMVENTUR.UI?.showStatus('❌ Multiplayer auth failed');
-        });
-        
-        // Listen for auth state
-        this.auth.onAuthStateChanged(user => {
-          if (user) {
-            this.playerUid = user.uid;
-            this.playerName = 'Player' + user.uid.slice(-4);
-            this.connected = true;
-            this.enabled = true;
-            console.log('🎮 Multiplayer ready! UID:', this.playerUid);
-            CHEMVENTUR.UI?.showStatus('🎮 Multiplayer connected!');
-            this.updateMultiplayerUI();
-          } else {
-            this.connected = false;
-            this.auth.signInAnonymously();
-          }
+          console.warn('🎮 Anonymous sign-in is not available (' + (err.code || err.message) + '); using this device\'s player id.');
+          ready(deviceId());
         });
         
         // Connection status
